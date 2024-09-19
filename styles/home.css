@@ -1,0 +1,144 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 36px;
+  font-family: "Sofadi One", system-ui;
+  color: antiquewhite;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: rgb(5, 5, 20);
+  color: rgb(197, 202, 202);
+}
+
+header {
+  padding: 20px;
+}
+
+main {
+  flex: 1;
+  padding: 10px;
+}
+
+.header-container {
+  margin-top: 50px;
+}
+
+.name {
+  text-align: center;
+  padding: 10px;
+  float: left;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.title {
+  letter-spacing: 15px;
+  font-size: 1.5rem;
+  background: linear-gradient(90deg, #ff6b6b, #c2a22c, #6acca3);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.input {
+  clear: both;
+  margin-right: 30px;
+  border: none;
+  padding: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.description {
+  padding: 10px;
+  background-color: rgb(144, 60, 60);
+  border-radius: 15px;
+  margin-top: 30px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: -1px 4px 29px 13px rgb(62, 4, 15);
+}
+
+p {
+  font-size: 0.6rem;
+  text-align: center;
+  padding: 10px 15px;
+}
+
+.info {
+  font-size: 0.8rem;
+  color: red;
+  text-align: center;
+  margin-top: 30px;
+}
+
+footer {
+  background-color: #1e1d1d;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 18px;
+}
+
+a {
+  position: relative; /* Umożliwia pozycjonowanie pseudoelementu */
+  text-decoration: none; /* Wyłączenie domyślnego podkreślenia */
+  font-size: 0.8rem;
+  animation: light 500ms infinite;
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  left: 50%; /* Zaczynamy od środka */
+  bottom: -5px;
+  width: 0; /* Początkowa szerokość 0, aby ukryć linię */
+  height: 1px; /* Grubość podkreślenia */
+  background-color: gold; /* Kolor podkreślenia */
+  transition: width 0.4s ease, left 0.4s ease; /* Animacja szerokości i pozycji */
+}
+
+a:hover::after {
+  width: 100%; /* Rozszerzenie do pełnej szerokości */
+  left: 0; /* Linia przesuwa się w lewo i rozszerza się */
+}
+
+a:hover {
+  color: gold;
+  display: inline-block; /* Aby transformacja działała */
+  animation: none;
+}
+
+@keyframes light {
+  0% {
+    color: antiquewhite;
+  }
+
+  100% {
+    color: gold;
+  }
+}
+
+@media (max-width: 768px) {
+  .description {
+    width: 80%;
+  }
+}
+
+@media (max-width: 480px) {
+  .description {
+    width: 90%;
+  }
+}
