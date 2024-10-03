@@ -1,3 +1,48 @@
+<?php
+
+// password_verify($password,
+session_start();
+ob_start(); // Rozpocznij buforowanie wyjścia
+require_once "./dataBase/dbConn.php";
+
+
+
+// Sprawdzanie, czy użytkownik jest już zalogowany
+if (isset($_SESSION['nick'])) {
+    header("Location: game.php");
+    exit;
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Pobranie danych z formularza
+    $nick = $_POST["nick"];
+    $password = $_POST['password'];
+
+    // Przygotowanie zapytania do bazy danych
+    $stmt = $dbConfig->prepare("SELECT * FROM users WHERE nick = :nick");
+    $stmt->execute(['nick' => $nick]);
+
+    // Pobranie użytkownika z bazy
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+    // Sprawdzanie, czy użytkownik istnieje i hasło jest poprawne
+    if ($user &&  ($user['password'])) {
+        // Ustawianie sesji dla zalogowanego użytkownika
+        $_SESSION['nick'] = $user['nick'];
+
+
+        // Przekierowanie na stronę gry
+        header('Location: game.php');
+        exit;
+    } else {
+        // Błędne dane logowania
+        $_SESSION['e.login'] = '<p style="color: red; font-size: 0.5rem;">Niepoprawny nick lub hasło</p>';
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -25,9 +70,14 @@
                 <input type="password" name="password" id="password" placeholder="Wpisz swoje hasło" required></br>
 
                 <input type="submit" value="Zaloguj się">
-
+                <?php
+                if (isset($_SESSION['e.login'])) {
+                    echo $_SESSION['e.login'];
+                    unset($_SESSION['e.login']); // Usuwamy komunikat po wyświetleniu
+                }
+                ?>
             </div>
-            <p class="register">Nie masz jeszcze konta ? <a href="register.php">Zarejestruj sie tutaj!</a></p>
+            <p class="register">Nie masz jeszcze konta? <a href="register.php">Zarejestruj się tutaj!</a></p>
         </div>
     </form>
 

@@ -1,0 +1,149 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Sofadi One", system-ui;
+  color: antiquewhite;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: rgb(5, 5, 20);
+  color: rgb(197, 202, 202);
+}
+
+header {
+  padding: 20px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logout-container {
+  margin-left: auto;
+}
+
+.logout {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  background-color: #ff6b6b;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.logout:hover {
+  background-color: #ff4a4a;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  letter-spacing: 1px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff6b6b, #c2a22c, #6acca3);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin: 20px 0;
+  width: 100%;
+}
+.category {
+  font-weight: bold;
+  font-size: 1rem;
+  color: rgb(197, 202, 202);
+  margin: 15px 0;
+}
+
+.querry-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin: 20px auto;
+  text-align: center;
+}
+
+#querry {
+  font-size: 1.5rem;
+  padding: 10px;
+  color: rgba(174, 20, 41, 0.8);
+}
+
+.answers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+.answer {
+  flex: 0 0 calc(50% - 10px);
+  background-color: #174e84;
+  padding: 15px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.answer:hover {
+  background-color: #ff5959;
+  transform: scale(1.05);
+}
+
+footer {
+  background-color: #1e1d1d;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 18px;
+  position: relative;
+  left: 0;
+  right: 0;
+  margin-top: auto;
+}
+
+@media (max-width: 768px) {
+  .querry-container {
+    width: 90%;
+  }
+
+  .answer {
+    flex: 0 0 calc(100% - 20px);
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #querry {
+    font-size: 1.2rem;
+  }
+}

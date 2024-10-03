@@ -4,7 +4,7 @@
   box-sizing: border-box;
   font-family: "Sofadi One", system-ui;
   color: antiquewhite;
-  font-size: 36px; /* Główny rozmiar czcionki */
+  font-size: 36px;
 }
 
 html,
@@ -25,7 +25,7 @@ form {
 
 .title {
   text-align: center;
-  font-size: 1.5rem; /* Taki sam jak w pierwszym kodzie */
+  font-size: 1.5rem;
   background: linear-gradient(90deg, #ff6b6b, #c2a22c, #6acca3);
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -45,7 +45,12 @@ form {
 }
 
 .form {
-  font-size: 0.9rem; /* Taki sam rozmiar jak w pierwszym kodzie */
+  font-size: 0.9rem;
+}
+
+.login-error {
+  color: red;
+  font-size: 0.8rem;
 }
 
 footer {
@@ -68,7 +73,7 @@ a:hover {
 /* Stylizacja inputów */
 input {
   background-color: #bc8c23;
-  font-size: 0.5rem; /* Zmniejszenie czcionki dla inputów */
+  font-size: 0.5rem;
   padding: 10px;
   border: none;
   border-radius: 10px;
@@ -81,7 +86,7 @@ input {
 input[type="submit"] {
   background-color: #ff6b6b;
   color: #fff;
-  font-size: 0.8rem; /* Rozmiar czcionki jak w pierwszym kodzie */
+  font-size: 0.8rem;
   margin-top: 20px;
   padding: 10px;
   cursor: pointer;

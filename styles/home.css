@@ -93,31 +93,32 @@ footer {
 }
 
 a {
-  position: relative; /* Umożliwia pozycjonowanie pseudoelementu */
-  text-decoration: none; /* Wyłączenie domyślnego podkreślenia */
+  position: relative;
+  text-decoration: none;
   font-size: 0.8rem;
+
   animation: light 500ms infinite;
 }
 
 a::after {
   content: "";
   position: absolute;
-  left: 50%; /* Zaczynamy od środka */
+  left: 50%;
   bottom: -5px;
-  width: 0; /* Początkowa szerokość 0, aby ukryć linię */
-  height: 1px; /* Grubość podkreślenia */
-  background-color: gold; /* Kolor podkreślenia */
-  transition: width 0.4s ease, left 0.4s ease; /* Animacja szerokości i pozycji */
+  width: 0;
+  height: 1px;
+  background-color: gold;
+  transition: width 0.4s ease, left 0.4s ease;
 }
 
 a:hover::after {
-  width: 100%; /* Rozszerzenie do pełnej szerokości */
-  left: 0; /* Linia przesuwa się w lewo i rozszerza się */
+  width: 100%;
+  left: 0;
 }
 
 a:hover {
   color: gold;
-  display: inline-block; /* Aby transformacja działała */
+  display: inline-block;
   animation: none;
 }
 
