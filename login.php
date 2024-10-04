@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     // Sprawdzanie, czy użytkownik istnieje i hasło jest poprawne
-    if ($user &&  ($user['password'])) {
+    if ($user &&  password_verify($password, $user['password'])) {
         // Ustawianie sesji dla zalogowanego użytkownika
         $_SESSION['nick'] = $user['nick'];
 
