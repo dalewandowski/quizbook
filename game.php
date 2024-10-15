@@ -25,33 +25,36 @@
     </header>
 
     <main>
-        <?php
-        require_once "./dataBase/dbConn.php";
+        <div id="question"></div>
+        <script>
+            function randomQuestion() {
+                fetch('./controls/randomQuestion.php', {
+                        method: 'GET'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieciowy: " + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data); // Debugging
 
-        $id = rand(1, 25);
-
-        if ($_SERVER['REQUEST_METHOD'] === "GET") {
-            $db = $dbConfig->prepare("SELECT * FROM pytania WHERE id = :id ");
-        }
-        $db->execute(['id' => $id]);
-
-        $querry = $db->fetch(PDO::FETCH_ASSOC);
-
-        if ($querry) {
-
-            $correctAnswer = $querry['poprawna'];
-            echo '<span class="category">Kategoria: ' . htmlspecialchars($querry["kategoria"]) . "</span>";
-            echo '<div class="querry-container"> <span id="querry">' . htmlspecialchars($querry["pytanie"]) . "</span> </div>";
-            echo '<div class="answers">' .
-                '<button class="answer" onclick="checkAnswer(\'A\', \'' . $correctAnswer . '\')">' . htmlspecialchars($querry["odpowiedz_a"]) . '</button>' .
-                '<button class="answer" onclick="checkAnswer(\'B\', \'' . $correctAnswer . '\')">' . htmlspecialchars($querry["odpowiedz_b"]) . '</button>' .
-                '<button class="answer" onclick="checkAnswer(\'C\', \'' . $correctAnswer . '\')">' . htmlspecialchars($querry["odpowiedz_c"]) . '</button>' .
-                '<button class="answer" onclick="checkAnswer(\'D\', \'' . $correctAnswer . '\')">' . htmlspecialchars($querry["odpowiedz_d"]) . '</button>' .
-                '</div>';
-        } else {
-            echo "Nie znaleziono pytania :(";
-        };
-        ?>
+                        if (data.error) {
+                            // Jeśli wystąpił błąd, wyświetl komunikat
+                            document.getElementById('question').innerHTML = data.error;
+                        } else {
+                            // Wyświetl pytanie
+                            document.getElementById('question').innerHTML = data.question;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Błąd: " + error);
+                        document.getElementById('question').innerHTML = "Wystąpił błąd przy pobieraniu pytania.";
+                    });
+            }
+            randomQuestion();
+        </script>
     </main>
 
     <footer>

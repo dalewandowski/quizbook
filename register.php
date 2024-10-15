@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+require "./controls/validations.php";
 
 
 if (isset($_POST['email'])) {
@@ -9,6 +10,8 @@ if (isset($_POST['email'])) {
 
     // Walidacja imienia
     $name = $_POST['name'];
+
+
 
     if ((strlen($name) < 3) || (strlen($name) > 14)) {
         $checkSubmit = false;
