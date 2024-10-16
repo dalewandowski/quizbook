@@ -25,7 +25,13 @@
     </header>
 
     <main>
-        <div id="question"></div>
+        <div id="question" class='question'></div>
+        <div class="answer-container">
+            <div class="answer answerA"></div>
+            <div class="answer answerB"></div>
+            <div class="answer answerC"></div>
+            <div class="answer answerD"></div>
+        </div>
         <script>
             function randomQuestion() {
                 fetch('./controls/randomQuestion.php', {
@@ -38,14 +44,17 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data); // Debugging
-
+                        console.log(data);
                         if (data.error) {
-                            // Jeśli wystąpił błąd, wyświetl komunikat
+
                             document.getElementById('question').innerHTML = data.error;
                         } else {
-                            // Wyświetl pytanie
+
                             document.getElementById('question').innerHTML = data.question;
+                            document.querySelector('.answerA').innerHTML = data.odpA;
+                            document.querySelector('.answerB').innerHTML = data.odpB;
+                            document.querySelector('.answerC').innerHTML = data.odpC;
+                            document.querySelector('.answerD').innerHTML = data.odpD;
                         }
                     })
                     .catch(error => {
