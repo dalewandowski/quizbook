@@ -33,6 +33,9 @@
             <div class="answer answerD"></div>
         </div>
         <script>
+
+           let pts = 0;
+
             function randomQuestion() {
                 fetch('./controls/randomQuestion.php', {
                         method: 'GET'
@@ -55,12 +58,34 @@
                             document.querySelector('.answerB').innerHTML = data.odpB;
                             document.querySelector('.answerC').innerHTML = data.odpC;
                             document.querySelector('.answerD').innerHTML = data.odpD;
+
+                            const correctAnswer = data.correct;
+                            document.querySelectorAll('answer').forEach(e => {
+                                addEventListener("onclick", checkAnswer())
+                                
+                            });
                         }
                     })
                     .catch(error => {
                         console.error("Błąd: " + error);
                         document.getElementById('question').innerHTML = "Wystąpił błąd przy pobieraniu pytania.";
                     });
+            }
+
+            function checkAnswer(userCheck) {
+                fetch('./controls/checkAnswer.php', {
+                    method : "POST"
+                    header : "Content-Type: application/json"
+                    body : JSON.stringify({ 'correct' : corectAnswer, 'userChoice' : userChoice})
+                }).then(response => response.json)
+                .then(data => {
+                    if (data.correct){
+                        alert("OK!")
+                        <?PHP echo `'<div>${pts}</div>'` ?>;
+                        randomQuestion();
+                    }else alert("BAD!");
+                })
+                
             }
             randomQuestion();
         </script>
