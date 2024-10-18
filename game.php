@@ -32,9 +32,15 @@
             <div class="answer answerC"></div>
             <div class="answer answerD"></div>
         </div>
+        <div class="result-container">
+            <div class="text">PUNKTY: </div>
+            <div class="result"></div>
+        </div>
         <script>
-
-           let pts = 0;
+            let correctAnswer = '';
+            let pts = 0; // Punkty
+            let isAnswerChecked = false; // Flaga do sprawdzania odpowiedzi
+            let answerCount = 0;
 
             function randomQuestion() {
                 fetch('./controls/randomQuestion.php', {
@@ -47,23 +53,26 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
                         if (data.error) {
-
                             document.getElementById('question').innerHTML = data.error;
                         } else {
 
                             document.getElementById('question').innerHTML = data.question;
-                            document.querySelector('.answerA').innerHTML = data.odpA;
-                            document.querySelector('.answerB').innerHTML = data.odpB;
-                            document.querySelector('.answerC').innerHTML = data.odpC;
-                            document.querySelector('.answerD').innerHTML = data.odpD;
+                            document.querySelector('.answerA').innerHTML = "A)" + data.odpA;
+                            document.querySelector('.answerB').innerHTML = "B)" + data.odpB;
+                            document.querySelector('.answerC').innerHTML = "C)" + data.odpC;
+                            document.querySelector('.answerD').innerHTML = "D)" + data.odpD;
+                            correctAnswer = data.correct;
+                            isAnswerChecked = false; // Reset flag
 
-                            const correctAnswer = data.correct;
-                            document.querySelectorAll('answer').forEach(e => {
-                                addEventListener("onclick", checkAnswer())
-                                
+                            // Dodaj nasłuchiwacze zdarzeń tylko raz
+                            document.querySelectorAll('.answer').forEach(e => {
+                                e.removeEventListener("click", checkAnswer);
+                                e.addEventListener("click", function() {
+                                    checkAnswer(this.innerHTML.charAt(0));
+                                });
                             });
+
                         }
                     })
                     .catch(error => {
@@ -72,22 +81,35 @@
                     });
             }
 
-            function checkAnswer(userCheck) {
+            function checkAnswer(userChoice) {
+                if (isAnswerChecked) return; // Zablokuj ponowne kliknięcia
+
+                isAnswerChecked = true; // Ustaw flagę
                 fetch('./controls/checkAnswer.php', {
-                    method : "POST"
-                    header : "Content-Type: application/json"
-                    body : JSON.stringify({ 'correct' : corectAnswer, 'userChoice' : userChoice})
-                }).then(response => response.json)
-                .then(data => {
-                    if (data.correct){
-                        alert("OK!")
-                        <?PHP echo `'<div>${pts}</div>'` ?>;
-                        randomQuestion();
-                    }else alert("BAD!");
-                })
-                
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            'correct': correctAnswer,
+                            'userChoice': userChoice
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.correct) {
+                            pts++; // Zwiększ punkty
+                            document.querySelector('.result').innerHTML = pts; // Zaktualizuj wynik
+                        }
+                        randomQuestion(); // Pobierz nowe pytanie
+                    })
+                    .catch(error => {
+                        console.error("BŁĄD! ", error);
+                    });
             }
-            randomQuestion();
+            if (answerCount < 10) {
+                randomQuestion();
+            }
         </script>
     </main>
 
@@ -96,6 +118,6 @@
     </footer>
 
 </body>
-<script src="./controls/gameControl.js"></script>
+
 
 </html>
