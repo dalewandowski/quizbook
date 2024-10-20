@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizBook</title>
-    <meta name="description" content="Witaj naszym Quzie! Cieszymy się, że do nas trafiłeś i zapraszamy Cię do wzięcia udziału w wyjątkowej zabawie, podczas której sprawdzisz swoją wiedzę na różnorodne tematy.">
+    <meta name="description"
+        content="Witaj naszym Quzie! Cieszymy się, że do nas trafiłeś i zapraszamy Cię do wzięcia udziału w wyjątkowej zabawie, podczas której sprawdzisz swoją wiedzę na różnorodne tematy.">
     <link rel="stylesheet" href="./styles/home.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +18,8 @@
 
     <header>
         <div class="header-container">
-            <h6 class="title">Witaj w naszym Quizie! Postaraj się odpowiedzieć na jak największą liczbę pytań, aby uzyskać jak najlepszy wynik i stanąć na czołowej pozycji w naszym rankingu. Powodzenia!</h6>
+            <h6 class="title">Witaj w naszym Quizie! Postaraj się odpowiedzieć na jak największą liczbę pytań, aby uzyskać
+                jak najlepszy wynik i stanąć na czołowej pozycji w naszym rankingu. Powodzenia!</h6>
             <div class="logout-container">
                 <a href="./logout.php" class="logout">Wyloguj się</a>
             </div>
@@ -32,15 +34,18 @@
             <div class="answer answerC"></div>
             <div class="answer answerD"></div>
         </div>
+
         <div class="result-container">
-            <div class="text">PUNKTY: </div>
-            <div class="result"></div>
+            <p class="text">PUNKTY: </p>
+            <p class="result"></p>
         </div>
+
+
         <script>
             let correctAnswer = '';
-            let pts = 0; // Punkty
-            let isAnswerChecked = false; // Flaga do sprawdzania odpowiedzi
-            let answerCount = 0;
+            let pts = 0;
+            let isAnswerChecked = false;
+            let answerCount = 0
 
             function randomQuestion() {
                 fetch('./controls/randomQuestion.php', {
@@ -56,7 +61,6 @@
                         if (data.error) {
                             document.getElementById('question').innerHTML = data.error;
                         } else {
-
                             document.getElementById('question').innerHTML = data.question;
                             document.querySelector('.answerA').innerHTML = "A)" + data.odpA;
                             document.querySelector('.answerB').innerHTML = "B)" + data.odpB;
@@ -64,15 +68,6 @@
                             document.querySelector('.answerD').innerHTML = "D)" + data.odpD;
                             correctAnswer = data.correct;
                             isAnswerChecked = false; // Reset flag
-
-                            // Dodaj nasłuchiwacze zdarzeń tylko raz
-                            document.querySelectorAll('.answer').forEach(e => {
-                                e.removeEventListener("click", checkAnswer);
-                                e.addEventListener("click", function() {
-                                    checkAnswer(this.innerHTML.charAt(0));
-                                });
-                            });
-
                         }
                     })
                     .catch(error => {
@@ -81,10 +76,12 @@
                     });
             }
 
-            function checkAnswer(userChoice) {
-                if (isAnswerChecked) return; // Zablokuj ponowne kliknięcia
 
-                isAnswerChecked = true; // Ustaw flagę
+
+            function checkAnswer(userChoice, selectedElement) {
+                if (isAnswerChecked) return;
+
+                isAnswerChecked = true;
                 fetch('./controls/checkAnswer.php', {
                         method: "POST",
                         headers: {
@@ -95,21 +92,61 @@
                             'userChoice': userChoice
                         })
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.correct) {
-                            pts++; // Zwiększ punkty
-                            document.querySelector('.result').innerHTML = pts; // Zaktualizuj wynik
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd połączenia");
+                        } else {
+                            return response.json();
                         }
-                        randomQuestion(); // Pobierz nowe pytanie
                     })
+                    .then(data => {
+                        answerCount++
+                        if (answerCount < 3) {
+                            if (data.correct) {
+                                pts++; // inkrementacja punktów
+                                document.querySelector('.result').innerHTML = pts;
+                                selectedElement.style.background = "green"
+                            } else {
+                                selectedElement.style.background = "red";
+                                document.querySelector(`.answer${correctAnswer}`).style.background = "green";
+                            }
+                            setTimeout(() => {
+                                document.querySelectorAll('.answer').forEach(answer => {
+                                    answer.style.background = "#174e84";
+                                });
+
+                                randomQuestion();
+                            }, 1000);
+                        } else {
+                            document.querySelector('.question').style.display = "none";
+                            document.querySelector('.result').style.display = "none";
+                            document.querySelector('.text').style.display = "none";
+                            document.querySelector('.answer-container').innerHTML = `<h2>KONIEC GRY!</h2>
+                            <span>Zdobyłeś ${pts} punktów</span>
+                            <button onclick="restart()">Restart Gry</button>`;
+                            console.log("KONIEC!");
+
+                        }
+                    })
+
+
                     .catch(error => {
                         console.error("BŁĄD! ", error);
                     });
             }
-            if (answerCount < 10) {
-                randomQuestion();
-            }
+
+
+            randomQuestion();
+
+
+
+
+            document.querySelectorAll('.answer').forEach(answer => {
+                answer.addEventListener('click', function() {
+                    let userChoice = this.innerHTML.charAt(0);
+                    checkAnswer(userChoice, this); // Przekaż kliknięty element do funkcji
+                });
+            });
         </script>
     </main>
 
@@ -118,6 +155,5 @@
     </footer>
 
 </body>
-
 
 </html>
