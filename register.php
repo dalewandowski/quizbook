@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-require "./controls/validations.php";
 
 
 if (isset($_POST['email'])) {
@@ -48,6 +47,9 @@ if (isset($_POST['email'])) {
     if ((!filter_var($filteredEmail, FILTER_VALIDATE_EMAIL) || $filteredEmail != $email)) {
         $checkSubmit = false;
         $_SESSION['errEmail'] = "Podaj poprawny adres email!";
+    } else {
+
+        $email = $filteredEmail;
     }
 
     //Walidacja hasła
@@ -76,24 +78,44 @@ if (isset($_POST['email'])) {
 
 
 
-    if (password_verify($pass1, $passHash))
 
 
-        if ($checkSubmit == true) {
-            require_once './dataBase/dbConn.php';
 
-            $stmt = $dbConfig->prepare("INSERT INTO users (name, nick, email, password) VALUES (:name, :nick,
-            :email, :password )");
+    if ($checkSubmit) {
+        require './dataBase/dbConn.php';
+
+        $stmtNick = $dbConfig->prepare("SELECT * FROM USERS WHERE nick = :nick");
+        $stmtNick->execute(['nick' => $nick]);
+
+
+
+        if ($stmtNick->rowCount() > 0) {
+            $checkSubmit = false;
+            $_SESSION['errRegister'] =  'Taki nick istnieje';
+        }
+
+        $stmtEmail = $dbConfig->prepare("SELECT * FROM USERS WHERE email = :email");
+        $stmtEmail->execute(['email' => $email]);
+
+        if ($stmtEmail->rowCount() > 0) {
+            $checkSubmit = false;
+            $_SESSION['errRegister'] =  'Taki email juz istnieje';
+        }
+
+        if ($checkSubmit) {
+            $stmt = $dbConfig->prepare("INSERT INTO users (name, nick, email, password) VALUES (:name, :nick, :email, :password)");
             $stmt->execute([
                 'name' => $name,
                 'nick' => $nick,
                 'email' => $email,
                 'password' => $passHash
             ]);
-            header('location:login.php');
-            echo "walidacja udana. Możesz się zalogować";
+            header('Location:userRegistered.php');
+            exit;
+            var_dump($nick, $email);
         }
-}
+    };
+};
 
 
 ?>
@@ -150,7 +172,7 @@ if (isset($_POST['email'])) {
                 ?>
 
                 <label for="email">Email:</label></br>
-                <input type="email" name="email" id="password" placeholder="Wpisz swój email"></br>
+                <input type="email" name="email" id="email" placeholder="Wpisz swój email"></br>
 
                 <?php
                 if (isset($_SESSION['errEmail'])) {
@@ -169,7 +191,7 @@ if (isset($_POST['email'])) {
                 }
                 ?>
 
-                <label for="password">Powtórz hasło:</label></br>
+                <label for="password2">Powtórz hasło:</label></br>
                 <input type="password" name="password2" id="password" placeholder="Powtórz swoje hasło"></br>
 
                 <?php
@@ -180,6 +202,12 @@ if (isset($_POST['email'])) {
                 ?>
 
                 <input type="submit" value="Zarejestruj">
+                <?php
+                if (isset($_SESSION['errRegister'])) {
+                    echo '<div class="error">' . $_SESSION['errRegister'] . '</div>';
+                    unset($_SESSION['errRegister']);
+                }
+                ?>
 
             </div>
             <p class="register"></p>

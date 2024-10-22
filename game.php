@@ -58,6 +58,8 @@
                         return response.json();
                     })
                     .then(data => {
+                        console.log(data);
+
                         if (data.error) {
                             document.getElementById('question').innerHTML = data.error;
                         } else {
@@ -75,6 +77,7 @@
                         document.getElementById('question').innerHTML = "Wystąpił błąd przy pobieraniu pytania.";
                     });
             }
+
 
 
 
@@ -100,16 +103,30 @@
                         }
                     })
                     .then(data => {
-                        answerCount++
-                        if (answerCount < 3) {
-                            if (data.correct) {
-                                pts++; // inkrementacja punktów
-                                document.querySelector('.result').innerHTML = pts;
-                                selectedElement.style.background = "green"
-                            } else {
-                                selectedElement.style.background = "red";
-                                document.querySelector(`.answer${correctAnswer}`).style.background = "green";
-                            }
+                        if (data.correct) {
+                            pts++;
+                            document.querySelector('.result').innerHTML = pts;
+                            selectedElement.style.background = "green";
+                        } else {
+                            selectedElement.style.background = "red";
+                            document.querySelector(`.answer${correctAnswer}`).style.background = "green";
+                        }
+
+                        answerCount++;
+
+                        if (answerCount >= 3) {
+                            setTimeout(() => {
+                                document.querySelector('.question').style.display = "none";
+                                document.querySelector('.result').innerHTML = '';
+                                document.querySelector('.text').style.display = "none";
+                                document.querySelector('.answer-container').innerHTML = `
+                <h2>KONIEC GRY!</h2>
+                <span>Zdobyłeś ${pts} punktów</span>
+                <button id="restart-btn" type="submit" onclick="restart()">Restart Gry</button>`;
+                                console.log("KONIEC!");
+                            }, 1000);
+                        } else {
+
                             setTimeout(() => {
                                 document.querySelectorAll('.answer').forEach(answer => {
                                     answer.style.background = "#174e84";
@@ -117,36 +134,54 @@
 
                                 randomQuestion();
                             }, 1000);
-                        } else {
-                            document.querySelector('.question').style.display = "none";
-                            document.querySelector('.result').style.display = "none";
-                            document.querySelector('.text').style.display = "none";
-                            document.querySelector('.answer-container').innerHTML = `<h2>KONIEC GRY!</h2>
-                            <span>Zdobyłeś ${pts} punktów</span>
-                            <button onclick="restart()">Restart Gry</button>`;
-                            console.log("KONIEC!");
-
                         }
                     })
-
-
                     .catch(error => {
                         console.error("BŁĄD! ", error);
                     });
             }
 
 
-            randomQuestion();
 
+
+
+            function restart() {
+                pts = 0
+                answerCount = 0
+                document.querySelector('.question').style.display = "flex";
+                document.querySelector('.result').innerHTML = pts;
+                document.querySelector('.text').style.display = "block";
+                document.querySelector('.answer-container').innerHTML = `
+                                        <div class="answer answerA"></div>
+                                        <div class="answer answerB"></div>
+                                        <div class="answer answerC"></div>
+                                        <div class="answer answerD"></div>`;
+
+                document.querySelectorAll('.answer').forEach(answer => {
+                    answer.innerHTML = '';
+                    answer.style.background = "#174e84";
+                });
+
+                randomQuestion();
+
+                document.querySelectorAll('.answer').forEach(answer => {
+                    answer.addEventListener('click', function() {
+                        let userChoice = this.innerHTML.charAt(0);
+                        checkAnswer(userChoice, this);
+                    });
+                })
+            };
 
 
 
             document.querySelectorAll('.answer').forEach(answer => {
                 answer.addEventListener('click', function() {
                     let userChoice = this.innerHTML.charAt(0);
-                    checkAnswer(userChoice, this); // Przekaż kliknięty element do funkcji
+                    checkAnswer(userChoice, this);
                 });
             });
+
+            randomQuestion();
         </script>
     </main>
 

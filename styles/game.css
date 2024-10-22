@@ -27,6 +27,12 @@ header {
   justify-content: flex-end;
 }
 
+#restart-btn {
+  color: black !important;
+  padding: 5px !important;
+  text-align: center !important;
+}
+
 .logout-container {
   margin-left: auto;
 }
