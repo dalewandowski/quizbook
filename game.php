@@ -114,7 +114,7 @@
 
                         answerCount++;
 
-                        if (answerCount >= 3) {
+                        if (answerCount >= 15) {
                             setTimeout(() => {
                                 document.querySelector('.question').style.display = "none";
                                 document.querySelector('.result').innerHTML = '';
